@@ -2,11 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\BudgetItem\BudgetItemController;
+use App\Http\Controllers\Designer\DesignerController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Projects\ProjectController;
-use App\Models\Project;
-use Illuminate\Support\Facades\Auth;
+use App\Models\BudgetItem;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,39 +35,31 @@ Route::post('/register/vendor', [AuthController::class, 'vendorRegister'])->name
 
 Route::group(['middleware' => 'auth'], function(){
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    Route::get('/profile/page', [ProfileController::class, 'editVendor'])->name('vendor.profile');
-    Route::put('/profile', [ProfileController::class, 'vendorUpdate'])->name('vendor.update');
 
-
-    Route::group(['prefix' => 'vendor/product', 'as' => 'product.'], function(){
-        Route::get('/', [ProductController::class, 'index'])->name('index');
-        Route::get('/create', [ProductController::class, 'create'])->name('create');
-        Route::post('/create', [ProductController::class, 'store'])->name('store');
-        Route::get('/my', [ProductController::class, 'my'])->name('my');
-
-        Route::get('/{product}/edit', [ProductController::class, 'edit'])->name('edit');
-        Route::put('/{product}', [ProductController::class, 'update'])->name('update');
-        Route::delete('/{product}', [ProductController::class, 'destroy'])->name('delete');
-    });
 });
 
-
-
-Route::group(['prefix' => 'designer/project', 'as' => 'project.'], function(){
-    Route::get('/', [ProjectController::class, 'index'])->name('index');
-    Route::get('/create', [ProjectController::class, 'create'])->name('create');
-    Route::post('/create', [ProjectController::class, 'store'])->name('store');
-    Route::get('/my', [ProjectController::class, 'my'])->name('my');
-
-    Route::get('/{product}/edit', [ProjectController::class, 'edit'])->name('edit');
-    Route::put('/{product}', [ProjectController::class, 'update'])->name('update');
-    Route::delete('/{product}', [ProjectController::class, 'destroy'])->name('delete');
+    // vendorr routes
+    Route::middleware(['auth','user-role:vendor'])->group(function () {
+        Route::get('/profile/page', [ProfileController::class, 'editVendor'])->name('vendor.profile');
+        Route::put('/profile', [ProfileController::class, 'vendorUpdate'])->name('vendor.update');
+        Route::resource('vendor/product', ProductController::class);
 });
 
-    Route::get('/profile/page', [ProfileController::class, 'editdesigner'])->name('designer.profile');
-    Route::put('/profile', [ProfileController::class, 'designerUpdate'])->name('designer.update');
-    Route::get('/profile/purchase', [ProfileController::class, 'purchase'])->name('profile.purchase');
-    Route::get('/buy/{id}', [ProductController::class, 'add_to_cart'])->name('add');
+//designer routes
 
-    Route::resource('projects', ProjectController::class);
-    Route::delete('/attachments/{id}', [ProjectController::class, 'delete'])->name('attachment.delete');
+        Route::get('designer/profile', [ProfileController::class, 'designerProfile'])->name('designer.profile');
+        Route::put('designer/update', [ProfileController::class, 'designerUpdate'])->name('designer.update');
+        Route::resource('designer/projects', DesignerController::class);
+        Route::resource('designer/items', BudgetItemController::class);
+        Route::get('designer/materials', [DesignerController::class, 'viewMaterials'])->name('design.materials');
+        Route::get('designer/requirements', [DesignerController::class, 'client_requirements'])->name('design.requirements');
+        Route::get('/generate-pdf', [DesignerController::class, 'generateBudget'])->name('generate.pdf');
+        Route::get('/designer/budget-list', [DesignerController::class, 'budgetList'])->name('designer.budgetList');
+        Route::delete('/designer/budget/{id}', [DesignerController::class, 'deleteBudget'])->name('designer.budget.delete');
+
+
+
+
+
+
+

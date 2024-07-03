@@ -12,6 +12,8 @@
                     @if($project)
                         <p><strong>Project Name:</strong> {{ $project->project_name }}</p>
                         <p><strong>Project Location:</strong> {{ $project->project_location }}</p>
+                        <p><strong>Service type:</strong> {{ $project->service_type }}</p>
+                        <p><strong>Project Location:</strong> {{ $project->project_location }}</p>
                         <p><strong>Project Grade:</strong> {{ $project->project_grade }}</p>
                         <p><strong>Total Budget:</strong> {{ $project->total_budget }}</p>
                         <p><strong>Description:</strong> {{ $project->description }}</p>

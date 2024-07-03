@@ -26,7 +26,7 @@ class RegisterRequest extends FormRequest
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6',
             'phone' => ['required', 'string', 'regex:/^\+?[0-9]{7,15}$/'],
-            'cpassword' => 'required|string|min:6|same:password',
+            'cpassword' => 'string|min:6|same:password',
             'location' => 'required|string|max:255',
             'service_type' => 'nullable|string|max:255',
             'project_type' => 'nullable|string|max:255',

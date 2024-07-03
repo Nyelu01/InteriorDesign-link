@@ -28,9 +28,8 @@
                     <div class="col-xl-3 col-sm-6 mb-4">
                         <div class="card">
                             <div class="card-header text-center">
-                                <img src="{{ asset('storage/img/products/' . $product->image) }}"
-                                     alt="{{ $product->name }}"
-                                     style="height: 150px; width: 100%; object-fit: contain;">
+                                <img src="{{ asset('storage/img/products/' . $product->image) }}" alt="{{ $product->name }}"
+                                style="height: 150px; width: 100%; object-fit: contain;">
                             </div>
                             <div class="card-body p-3">
                                 <div class="row">
@@ -49,7 +48,7 @@
                                         <a href="{{ route('product.edit', $product->id) }}" class="btn bg-gradient-success btn-sm">
                                             Edit
                                         </a>
-                                        <form action="{{ route('product.delete', $product->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this product?');">
+                                        <form action="{{ route('product.destroy', $product->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this product?');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn bg-gradient-danger btn-sm">Delete</button>

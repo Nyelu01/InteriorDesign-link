@@ -64,4 +64,39 @@ class ProfileController extends Controller
             return back()->with(['message' => 'Failed to update profile. Please try again later.', 'status' => 'error']);
         }
     }
+
+    public function designerUpdate(RegisterRequest $request, $id)
+    {
+        $user = User::findOrFail($id);
+        $fileName = '';
+        if ($request->hasFile('certificate')) {
+            $fileName = 'certificate_' . time() . '.' . $request->file('certificate')->extension();
+            $request->certificate->storeAs('public/img/certificate', $fileName);
+            if ($user->certificate) {
+                Storage::delete('public/img/certificate' . $user->certificate);
+            }
+        } else {
+            $fileName = $user->certificate;
+        }
+
+        $userData = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'password' => Hash::make($request->password),
+            'location' => $request->location,
+            'service_type' => $request->service_type,
+            'certificate' => $fileName,
+
+        ];
+
+        $user->update($userData);
+        return redirect()->back()->with(['message' => 'Profile updated successfully!', 'status' => 'success']);
+    }
+
+    public function designerProfile()
+    {
+        $user = auth()->user();
+        return view('designer.profile.profile', compact('user'));
+    }
 }

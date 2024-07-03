@@ -1,9 +1,11 @@
 <?php
 
-use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\Auth\ClientController;
+use App\Http\Controllers\Budget\BudgetController;
+use App\Http\Controllers\DesignRequiremeent\DesignRequirementController;
 use App\Http\Controllers\Projects\ProjectController;
-use Illuminate\Http\Request;
+use App\Models\Budget;
+use App\Models\DesignRequirement;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,30 +24,21 @@ use Illuminate\Support\Facades\Route;
 // });
 
 //Registration
-Route::controller(AuthController::class)->group(function(){
-    Route::post('designer/register', 'designerRegister');
-    Route::post('vendor/register', 'vendorRegister');
-    Route::post('login', 'userLogin');
-});
+Route::post('register', [ClientController::class, 'register']);
 
 //Authentication
-Route::prefix('auth')->group(function () {
-    Route::post('login', [AuthController::class, 'login']);
-    //User must Be authenticated
-    Route::middleware('auth:sanctum')->group(function () {
-        Route::post('logout/{userId}', [AuthController::class, 'logout']);
-    });
+ Route::post('login', [ClientController::class, 'login']);
+
+//User must Be authenticated
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('logout/{userId}', [ClientController::class, 'logout']);
 });
 
 
 //protected routes
 Route::middleware('auth:sanctum')->group( function () {
-    Route::resource('products', ProductController::class);
+
+    Route::resource('projects', ProjectController::class);
+    Route::resource('requirements', DesignRequirementController::class);
+    Route::resource('budgets', BudgetController::class);
 });
-
-
-Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
-Route::post('/projects/create', [ProjectController::class, 'store'])->name('projects.store');
-Route::get('/projects/{project}', [ProjectController::class, 'show'])->name('projects.show');
-Route::put('/projects/update/{id}', [ProjectController::class, 'update'])->name('projects.update');
-Route::delete('/projects/delete/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');

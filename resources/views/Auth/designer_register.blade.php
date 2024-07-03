@@ -11,7 +11,8 @@
                     {{-- left box with image --}}
                     <div class="col-md-6 rounded-4 d-flex justify-content-center align-items-center flex-column left-box">
                         <div class="featured-image mb-3">
-                            <img src="{{ asset('assets/images/Interior designer.png') }}" class="img-fluid" style="width: 500px; height:550px">
+                            <img src="{{ asset('assets/images/Interior designer.png') }}" class="img-fluid"
+                                style="width: 500px; height:550px">
                         </div>
                         <p class="text-white fs-2" style="font-family: 'Courier New', Courier, monospace; font-weight: 600;">
                             Be Verified</p>
@@ -26,7 +27,8 @@
                                 <h2 class="fw-bold text-secondary">Register</h2>
                             </div>
                             <div class="card-body p-5">
-                                <form action="{{ route('designer.register') }}" method="post" enctype="multipart/form-data">
+                                <form action="{{ route('designer.register') }}" method="post"
+                                    enctype="multipart/form-data">
                                     @csrf
                                     @method('post')
                                     <div class="mb-3">
@@ -109,41 +111,17 @@
                                         <select name="service_type" id="service_type"
                                             class="form-select rounded-0 @error('service_type') is-invalid @enderror">
                                             <option value="" selected disabled>Select Service Type</option>
-                                            <option value="Interior Design">Interior furnishing</option>
-                                            <option value="Architecture">Interior Decoration Design</option>
-                                            <option value="Landscape Design">All</option>
+                                            <option value="interior furnishing">Interior furnishing</option>
+                                            <option value="interior decoration">Interior Decoration Design</option>
+                                            <option value="all">All</option>
                                         </select>
                                         @error('service_type')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
                                     <div class="mb-3">
-                                        <select name="project_type" id="project_type" class="form-select rounded-0">
-                                            <option value="" selected disabled>Select Project Type</option>
-                                            <option value="Residential">Residential</option>
-                                            <option value="Workplace">Workplace</option>
-                                            <option value="Commercial">Commercial</option>
-                                            <option value="Industrial">Industrial</option>
-                                            <option value="Other">Other</option>
-                                        </select>
+                                        <input type="hidden" name="role" value="0">
                                     </div>
-
-                                    <div id="other_project_type_input" style="display: none;" class="mb-3">
-                                        <label for="other_project_type" class="form-label">Other Project Type:</label>
-                                        <input type="text" id="other_project_type" name="project_type" class="form-control rounded-0">
-                                    </div>
-
-                                    <script>
-                                        document.getElementById('project_type').addEventListener('change', function() {
-                                            var otherInput = document.getElementById('other_project_type_input');
-                                            if (this.value === 'Other') {
-                                                otherInput.style.display = 'block';
-                                            } else {
-                                                otherInput.style.display = 'none';
-                                            }
-                                        });
-                                    </script>
-
                                     <div class="mb-3">
                                         <label for="business-licence" class="form-label">Upload certificate</label>
                                         <input type="file" name="certificate" id="certificate"
@@ -157,7 +135,8 @@
                                         <input type="submit" value="Register" class="btn btn-secondary rounded-0">
                                     </div>
                                     <div class="text-center text-secondary">
-                                        <div>Already have an account? <a href="{{route('auth.login')}}" class="text-decoration-none">Login
+                                        <div>Already have an account? <a href="{{ route('auth.login') }}"
+                                                class="text-decoration-none">Login
                                                 Here</a>
                                         </div>
                                     </div>

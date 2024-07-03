@@ -22,7 +22,10 @@ return new class extends Migration
             $table->string('project_type')->nullable();
             $table->string('certificate')->nullable();
             $table->string('business_licence')->nullable();
-            $table->string('user_role')->nullable();
+
+            //0 = designer, 1 = vendor, 2 = client
+            $table->tinyInteger('role')->default(2);
+
             $table->rememberToken();
             $table->timestamps();
         });

@@ -12,6 +12,7 @@
 
   <!-- Theme style -->
   <link href="{{ asset('../assets/css/adminlte.min.css') }}" rel="stylesheet">
+  <link href="{{ asset('../assets/css/style.css') }}" rel="stylesheet">
 
 </head>
 <body class="hold-transition sidebar-mini">
@@ -24,10 +25,13 @@
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="../../index3.html" class="nav-link">Home</a>
+        <a href="{{route('projects.index')}}" class="nav-link">Home</a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="{{ route('logout') }}" class="nav-link">Log Out</a>
+        <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+          @csrf
+          <button type="submit" class="nav-link btn btn-link" style="display: inline; cursor: pointer;">Log Out</button>
+        </form>
       </li>
     </ul>
   </nav>
@@ -48,7 +52,7 @@
           <img src="{{asset('../assets/images/user-avatar.png')}}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          {{-- <a href="#" class="d-block">{{ Auth::user()->name }}</a> --}}
+          <a href="#" class="d-block">{{ Auth::user()->name }}</a>
         </div>
       </div>
 

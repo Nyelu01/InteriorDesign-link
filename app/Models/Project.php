@@ -13,18 +13,30 @@ class Project extends Model
         'project_name',
         'project_location',
         'project_grade',
+        'service_type',
+        'project_type',
         'total_budget',
         'description',
         'user_id',
     ];
 
-    public function posted_by()
+
+    public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
 
     public function attachments()
     {
         return $this->hasMany(Attachment::class);
     }
+
+
+    public function requirements() {
+        return $this->hasMany(DesignRequirement::class, 'project_id');
+
+    }
+
+
 }

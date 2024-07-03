@@ -31,10 +31,10 @@
                             <div class="mb-3 d-grid">
                                 <input type="submit" value="Login" class="btn btn-secondary rounded-0">
                             </div>
-                            <div class="text-center text-secondary">
+                            {{-- <div class="text-center text-secondary">
                                 <div>Don't have an account? <a href="/register_designer" class="text-decoration-none">Register Here</a>
                                 </div>
-                            </div>
+                            </div> --}}
                         </form>
                     </div>
                 </div>

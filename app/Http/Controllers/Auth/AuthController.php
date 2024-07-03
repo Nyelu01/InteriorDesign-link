@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
+use App\Providers\RouteServiceProvider;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -53,12 +54,18 @@ class AuthController extends Controller
                 'service_type' => $request->service_type,
                 'project_type' => $request->project_type,
                 'certificate' => $fileName,
+                'role' => $request->role, // Ensure role is being set correctly
             ]);
-            //Generate t$oken for the user created
+
+            // Generate token for the user created
             $token = $user->createToken('user_token')->plainTextToken;
 
+            Auth::login($user);
+
             DB::commit();
-            return response()->json(['message' => "Account created successfully", "user" => $user, 'token' => $token], 201);
+
+            // Redirect the user to the dashboard
+            return redirect()->route('projects.index')->with('success', 'Account created successfully');
         } catch (Exception $error) {
             DB::rollBack();
             return response()->json([
@@ -66,34 +73,6 @@ class AuthController extends Controller
                 'message' => $error->getMessage()
             ], 500);
         }
-    }
-
-    public function designerUpdate(Request $request, User $user)
-    {
-        $fileName = '';
-        if ($request->hasFile('certificate')) {
-            $fileName = 'certificate_' . time() . '.' . $request->file('certificate')->extension();
-            $request->certificate->storeAs('public/img/certificate', $fileName);
-            if ($user->certificate) {
-                Storage::delete('public/img/certificate' . $user->certificate);
-            }
-        } else {
-            $fileName = $user->certificate;
-        }
-
-        $userData = [
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'password' => Hash::make($request->password),
-            'location' => $request->location,
-            'service_type' => $request->service_type,
-            'project_type' => $request->project_type,
-            'certificate' => $fileName,
-        ];
-
-        $user->update($userData);
-        return redirect()->route('profile.index')->with(['message' => 'Profile updated successfully!', 'status' => 'success']);
     }
 
 
@@ -113,7 +92,11 @@ class AuthController extends Controller
                 'password' => Hash::make($request->password),
                 'location' => $request->location,
                 'business_licence' => $fileName,
+                'role' => $request->role,
+
             ]);
+            //Generate t$oken for the user created
+            $token = $user->createToken('user_token')->plainTextToken;
 
             // Log the user in
             Auth::login($user);
@@ -121,7 +104,7 @@ class AuthController extends Controller
             DB::commit();
 
             // Redirect the user to the dashboard
-            return redirect()->route('product.my')->with('success', 'Account created successfully');
+            return redirect()->route('product.index')->with('success', 'Account created successfully');
             //     return response()->json(['message' => "Account created successfully", "user" => $user, 'token' => $token], 201);
         } catch (Exception $error) {
             DB::rollBack();
@@ -135,29 +118,40 @@ class AuthController extends Controller
         }
     }
 
-  
+    
 
+    // protected $redirectTo = RouteServiceProvider::HOME;
 
-    public function userLogin(LoginRequest $request)
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+
+    public function userlogin(LoginRequest $request)
     {
+        $user = $request->validated();
         $user = User::where('email', $request->input('email'))->first();
 
         if ($user && Hash::check($request->input('password'), $user->password)) {
-            // Delete all user old tokens
+
+            // delete old user token
             $user->tokens()->delete();
-            // Creating new user token
+
+            // creating new token
             $token = $user->createToken('user_token')->plainTextToken;
 
-            // return response()->json(['user' => $user, 'token' => $token], 200);
-            // Log the user in
+            // log in the user
             Auth::login($user);
 
-            // Redirect to the dashboard
-            return redirect()->route('product.my')->with('success', 'Logged in successfully');
-        } else {
-            //return response()->json(['error' => 'Invalid Credentials'], 401);
-            return redirect()->back()->with('error', 'Invalid Credentials');
+            if (auth()->user()->role == 'designer') {
+                return redirect()->route('projects.index')->with('success', 'Logged in successfully');
+            } else if (auth()->user()->role == 'vendor') {
+                return redirect()->route('product.index')->with('success', 'Logged in successfully');
+            }
         }
+
+        return redirect()->route('auth.login')->withErrors(['email' => 'No matching user found with the provided email or password']);
     }
 
 

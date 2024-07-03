@@ -10,8 +10,8 @@
         </a>
         <ul class="nav nav-treeview">
           <li class="nav-item">
-            <a href="{{ route('product.my') }}" class="nav-link">
-              <i class="fas fa-user nav-icon"></i>
+            <a href="{{ route('product.index') }}" class="nav-link">
+                <i class="fas fa-shopping-cart nav-icon"></i>
               <p>My Product</p>
             </a>
           </li>
@@ -21,12 +21,12 @@
               <p>Add Product</p>
             </a>
           </li>
-          <li class="nav-item">
+          {{-- <li class="nav-item">
             <a href="" class="nav-link">
               <i class="fas fa-user-circle nav-icon"></i>
               <p>Profile</p>
             </a>
-          </li>
+          </li> --}}
         </ul>
       </li>
     </ul>

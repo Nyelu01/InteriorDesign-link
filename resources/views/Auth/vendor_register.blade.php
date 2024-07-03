@@ -104,6 +104,9 @@
                                         @enderror
                                     </div>
                                     <div class="mb-3">
+                                        <input type="hidden" name="role" value="1">
+                                    </div>
+                                    <div class="mb-3">
                                         <label for="business_licence" class="form-label">Upload business licence</label>
                                         <input type="file" name="business_licence" id="business_licence"
                                             class="form-control rounded-0 @error('business-licence') is-invalid @enderror">
